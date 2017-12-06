@@ -5,21 +5,37 @@ import os
 workingDir = os.getcwd()
 imageDir = "tmp"
 
+labelFilename = "img_labels.txt"
+
 sampleNumbers = [1, 50, 100, 150]
 
 finalLocation = workingDir + "/image_samples"
 print finalLocation
 
 objectTypeDirs = glob.glob(imageDir+"/*")
-samples = []
 
-for objectTypeDir in objectTypeDirs:
-  objectDirs = glob.glob(objectTypeDir + "/*")
-  for objectDir in objectDirs:
-    for sampleNumber in sampleNumbers:
-      newSamples = glob.glob(objectDir + "/*_*_" +str(sampleNumber) + ".pcd")
-      samples.extend(newSamples)
-      for newSample in newSamples:
-        copy2(newSample,finalLocation)
-      
+def extract_images():
+  samples = []
+  for objectTypeDir in objectTypeDirs:
+    objectDirs = glob.glob(objectTypeDir + "/*")
+    for objectDir in objectDirs:
+      for sampleNumber in sampleNumbers:
+        newSamples = glob.glob(objectDir + "/*_*_" +str(sampleNumber) + ".pcd")
+        samples.extend(newSamples)
+        for newSample in newSamples:
+          copy2(newSample,finalLocation)
+  return samples
+
+def store(filenames):
+  of = open(labelFilename, "w")
+  for fn in filenames:
+    objfn = fn.split("/")[-1]
+    label = objfn.split("_")[0]
     
+    of.write(objfn + ", " + label + "\n")
+          
+  
+      
+if __name__ =="__main__": 
+  filenames = extract_images()
+  store(filenames)
