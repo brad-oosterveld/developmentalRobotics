@@ -3,13 +3,13 @@ from shutil import copy2
 import os
 
 workingDir = os.getcwd()
-imageDir = "tmp"
+imageDir = "/home/brad/data/rgbd-dataset"
 
 labelFilename = "img_labels.txt"
 
 sampleNumbers = [1, 50, 100, 150]
 
-finalLocation = workingDir + "/image_samples"
+finalLocation = workingDir + "/image_samples_png/"
 print finalLocation
 
 objectTypeDirs = glob.glob(imageDir+"/*")
@@ -20,7 +20,7 @@ def extract_images():
     objectDirs = glob.glob(objectTypeDir + "/*")
     for objectDir in objectDirs:
       for sampleNumber in sampleNumbers:
-        newSamples = glob.glob(objectDir + "/*_*_" +str(sampleNumber) + ".pcd")
+        newSamples = glob.glob(objectDir + "/*_*_" +str(sampleNumber) + "_crop.png")
         samples.extend(newSamples)
         for newSample in newSamples:
           copy2(newSample,finalLocation)
@@ -38,4 +38,4 @@ def store(filenames):
       
 if __name__ =="__main__": 
   filenames = extract_images()
-  store(filenames)
+  # store(filenames)
