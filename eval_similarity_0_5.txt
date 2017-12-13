@@ -1,0 +1,423 @@
+similarity: .5
+pc
+0.488857938719
+lightbulb total:  47
+	correct classification:  8
+	incorrect classificion:  37
+	no classification:  2
+hand_towel total:  60
+	correct classification:  47
+	incorrect classificion:  13
+	no classification:  0
+dry_battery total:  69
+	correct classification:  19
+	incorrect classificion:  50
+	no classification:  0
+apple total:  60
+	correct classification:  33
+	incorrect classificion:  27
+	no classification:  0
+calculator total:  60
+	correct classification:  25
+	incorrect classificion:  35
+	no classification:  0
+keyboard total:  60
+	correct classification:  34
+	incorrect classificion:  26
+	no classification:  0
+sponge total:  144
+	correct classification:  100
+	incorrect classificion:  44
+	no classification:  0
+cereal_box total:  59
+	correct classification:  26
+	incorrect classificion:  33
+	no classification:  0
+pliers total:  72
+	correct classification:  15
+	incorrect classificion:  57
+	no classification:  0
+marker total:  105
+	correct classification:  23
+	incorrect classificion:  82
+	no classification:  0
+scissors total:  48
+	correct classification:  22
+	incorrect classificion:  26
+	no classification:  0
+lime total:  48
+	correct classification:  21
+	incorrect classificion:  27
+	no classification:  0
+flashlight total:  60
+	correct classification:  28
+	incorrect classificion:  32
+	no classification:  0
+glue_stick total:  72
+	correct classification:  44
+	incorrect classificion:  28
+	no classification:  0
+food_can total:  168
+	correct classification:  158
+	incorrect classificion:  10
+	no classification:  0
+lemon total:  72
+	correct classification:  29
+	incorrect classificion:  43
+	no classification:  0
+peach total:  36
+	correct classification:  5
+	incorrect classificion:  31
+	no classification:  0
+food_bag total:  96
+	correct classification:  50
+	incorrect classificion:  46
+	no classification:  0
+toothpaste total:  60
+	correct classification:  20
+	incorrect classificion:  40
+	no classification:  0
+food_jar total:  72
+	correct classification:  40
+	incorrect classificion:  32
+	no classification:  0
+bowl total:  72
+	correct classification:  68
+	incorrect classificion:  4
+	no classification:  0
+food_box total:  144
+	correct classification:  84
+	incorrect classificion:  60
+	no classification:  0
+camera total:  35
+	correct classification:  2
+	incorrect classificion:  33
+	no classification:  0
+orange total:  48
+	correct classification:  23
+	incorrect classificion:  25
+	no classification:  0
+banana total:  48
+	correct classification:  17
+	incorrect classificion:  31
+	no classification:  0
+plate total:  84
+	correct classification:  79
+	incorrect classificion:  5
+	no classification:  0
+ball total:  84
+	correct classification:  28
+	incorrect classificion:  56
+	no classification:  0
+mushroom total:  36
+	correct classification:  2
+	incorrect classificion:  33
+	no classification:  1
+overall total:  3590
+	correct classification:  1755
+	incorrect classificion:  1831
+	no classification:  4
+pear total:  72
+	correct classification:  19
+	incorrect classificion:  53
+	no classification:  0
+kleenex total:  59
+	correct classification:  23
+	incorrect classificion:  36
+	no classification:  0
+toothbrush total:  60
+	correct classification:  15
+	incorrect classificion:  45
+	no classification:  0
+binder total:  36
+	correct classification:  8
+	incorrect classificion:  28
+	no classification:  0
+notebook total:  60
+	correct classification:  48
+	incorrect classificion:  12
+	no classification:  0
+garlic total:  84
+	correct classification:  47
+	incorrect classificion:  37
+	no classification:  0
+instant_noodles total:  96
+	correct classification:  49
+	incorrect classificion:  47
+	no classification:  0
+comb total:  48
+	correct classification:  9
+	incorrect classificion:  39
+	no classification:  0
+water_bottle total:  108
+	correct classification:  43
+	incorrect classificion:  65
+	no classification:  0
+tomato total:  96
+	correct classification:  33
+	incorrect classificion:  63
+	no classification:  0
+stapler total:  96
+	correct classification:  20
+	incorrect classificion:  76
+	no classification:  0
+greens total:  48
+	correct classification:  17
+	incorrect classificion:  31
+	no classification:  0
+onion total:  72
+	correct classification:  34
+	incorrect classificion:  37
+	no classification:  1
+potato total:  72
+	correct classification:  16
+	incorrect classificion:  56
+	no classification:  0
+pitcher total:  36
+	correct classification:  22
+	incorrect classificion:  14
+	no classification:  0
+cap total:  48
+	correct classification:  26
+	incorrect classificion:  22
+	no classification:  0
+shampoo total:  72
+	correct classification:  46
+	incorrect classificion:  26
+	no classification:  0
+soda_can total:  72
+	correct classification:  46
+	incorrect classificion:  26
+	no classification:  0
+food_cup total:  60
+	correct classification:  41
+	incorrect classificion:  19
+	no classification:  0
+bell_pepper total:  72
+	correct classification:  30
+	incorrect classificion:  42
+	no classification:  0
+coffee_mug total:  96
+	correct classification:  91
+	incorrect classificion:  5
+	no classification:  0
+rubber_eraser total:  48
+	correct classification:  17
+	incorrect classificion:  31
+	no classification:  0
+cell_phone total:  60
+	correct classification:  5
+	incorrect classificion:  55
+	no classification:  0
+
+
+img
+0.575766016713
+lightbulb total:  47
+	correct classification:  24
+	incorrect classificion:  20
+	no classification:  3
+hand_towel total:  60
+	correct classification:  25
+	incorrect classificion:  29
+	no classification:  6
+dry_battery total:  72
+	correct classification:  26
+	incorrect classificion:  44
+	no classification:  2
+apple total:  60
+	correct classification:  43
+	incorrect classificion:  15
+	no classification:  2
+calculator total:  60
+	correct classification:  44
+	incorrect classificion:  13
+	no classification:  3
+sponge total:  144
+	correct classification:  102
+	incorrect classificion:  37
+	no classification:  5
+rubber_eraser total:  48
+	correct classification:  18
+	incorrect classificion:  29
+	no classification:  1
+keyboard total:  60
+	correct classification:  55
+	incorrect classificion:  3
+	no classification:  2
+marker total:  106
+	correct classification:  60
+	incorrect classificion:  41
+	no classification:  5
+scissors total:  48
+	correct classification:  28
+	incorrect classificion:  20
+	no classification:  0
+lime total:  48
+	correct classification:  23
+	incorrect classificion:  25
+	no classification:  0
+flashlight total:  60
+	correct classification:  24
+	incorrect classificion:  33
+	no classification:  3
+soda_can total:  72
+	correct classification:  24
+	incorrect classificion:  47
+	no classification:  1
+food_can total:  168
+	correct classification:  125
+	incorrect classificion:  42
+	no classification:  1
+lemon total:  72
+	correct classification:  56
+	incorrect classificion:  15
+	no classification:  1
+peach total:  36
+	correct classification:  10
+	incorrect classificion:  24
+	no classification:  2
+food_bag total:  96
+	correct classification:  56
+	incorrect classificion:  35
+	no classification:  5
+toothpaste total:  60
+	correct classification:  14
+	incorrect classificion:  45
+	no classification:  1
+food_jar total:  72
+	correct classification:  39
+	incorrect classificion:  31
+	no classification:  2
+bowl total:  72
+	correct classification:  48
+	incorrect classificion:  19
+	no classification:  5
+food_box total:  144
+	correct classification:  84
+	incorrect classificion:  55
+	no classification:  5
+camera total:  35
+	correct classification:  12
+	incorrect classificion:  19
+	no classification:  4
+orange total:  48
+	correct classification:  24
+	incorrect classificion:  24
+	no classification:  0
+banana total:  48
+	correct classification:  44
+	incorrect classificion:  2
+	no classification:  2
+plate total:  84
+	correct classification:  55
+	incorrect classificion:  28
+	no classification:  1
+ball total:  84
+	correct classification:  52
+	incorrect classificion:  26
+	no classification:  6
+mushroom total:  36
+	correct classification:  15
+	incorrect classificion:  15
+	no classification:  6
+pear total:  72
+	correct classification:  40
+	incorrect classificion:  30
+	no classification:  2
+pitcher total:  36
+	correct classification:  28
+	incorrect classificion:  8
+	no classification:  0
+kleenex total:  59
+	correct classification:  26
+	incorrect classificion:  30
+	no classification:  3
+toothbrush total:  60
+	correct classification:  30
+	incorrect classificion:  27
+	no classification:  3
+binder total:  36
+	correct classification:  16
+	incorrect classificion:  15
+	no classification:  5
+notebook total:  60
+	correct classification:  22
+	incorrect classificion:  35
+	no classification:  3
+garlic total:  84
+	correct classification:  36
+	incorrect classificion:  42
+	no classification:  6
+instant_noodles total:  96
+	correct classification:  73
+	incorrect classificion:  22
+	no classification:  1
+comb total:  48
+	correct classification:  14
+	incorrect classificion:  29
+	no classification:  5
+water_bottle total:  104
+	correct classification:  90
+	incorrect classificion:  12
+	no classification:  2
+tomato total:  96
+	correct classification:  50
+	incorrect classificion:  44
+	no classification:  2
+stapler total:  96
+	correct classification:  45
+	incorrect classificion:  46
+	no classification:  5
+greens total:  48
+	correct classification:  44
+	incorrect classificion:  3
+	no classification:  1
+onion total:  72
+	correct classification:  21
+	incorrect classificion:  49
+	no classification:  2
+potato total:  72
+	correct classification:  38
+	incorrect classificion:  33
+	no classification:  1
+cap total:  48
+	correct classification:  24
+	incorrect classificion:  13
+	no classification:  11
+shampoo total:  72
+	correct classification:  42
+	incorrect classificion:  29
+	no classification:  1
+glue_stick total:  72
+	correct classification:  55
+	incorrect classificion:  16
+	no classification:  1
+food_cup total:  60
+	correct classification:  26
+	incorrect classificion:  32
+	no classification:  2
+bell_pepper total:  72
+	correct classification:  57
+	incorrect classificion:  12
+	no classification:  3
+coffee_mug total:  96
+	correct classification:  67
+	incorrect classificion:  26
+	no classification:  3
+pliers total:  72
+	correct classification:  46
+	incorrect classificion:  21
+	no classification:  5
+cereal_box total:  59
+	correct classification:  33
+	incorrect classificion:  25
+	no classification:  1
+cell_phone total:  60
+	correct classification:  14
+	incorrect classificion:  46
+	no classification:  0
+overall total:  3590
+	correct classification:  2067
+	incorrect classificion:  1381
+	no classification:  142
