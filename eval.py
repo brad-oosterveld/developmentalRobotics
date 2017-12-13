@@ -156,22 +156,13 @@ def plotIncrementalResults(results,title):
 
 
 def analyzeResults(results):
-  total = 0
-  totalT = 0
-  totalF = 0
-  totalN = 0
   for result in results:
     [stotalT,stotalF,stotalN,subtotal] = results[result][0]
-    total += subtotal   
-    totalT += stotalT
-    totalF += stotalF
-    totalN += stotalN
     if not subtotal ==  0:
-      print result,"sub true / all : ", stotalT / (float(subtotal))
-
-  print "total true / all : ", totalT / (float(total))
-  print "total false / all : ", totalF / (float(total))
-  print "total no class / all : ", totalN / (float(total))
+      print result, "total: ", subtotal
+      print "\tcorrect classification: ", stotalT
+      print "\tincorrect classificion: ", stotalF
+      print "\tno classification: ", stotalN
 
 if __name__== "__main__":
   [imgDataset, imgResults] = imgNet()
@@ -210,14 +201,14 @@ if __name__== "__main__":
 
   pcResults = myNN(pcDataset,pcResults)
   print "pc\n",pcResults["overall"]
-  #analyzeResults(pcResults)
+  analyzeResults(pcResults)
 
   plotIncrementalResults(pcResults, "Point Cloud")
   print "\n"
 
   imgResults = myNN(imgDataset,imgResults)
   #print "img\n",imgResults
-  #analyzeResults(imgResults)
+  analyzeResults(imgResults)
 
   plotIncrementalResults(imgResults, "Image")
 
@@ -228,4 +219,3 @@ if __name__== "__main__":
   #fusedResults = myNN(fusedDataset, fusedResults)
   #print  "fused\n", fusedResults
   #analyzeResults(fusedResults)
-
