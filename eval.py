@@ -2,6 +2,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import glob
 import random
+import matplotlib.pyplot as plt
+from threading import Thread
+#from multiprocessing import Process
 #evaluation plan
 
 #gross evaluation:
@@ -35,14 +38,6 @@ def extractPCFeatures(filename):
     out.append(float(elem))
   return out
 
-def calculateNN(data,dataset):
-  similarities = []
-  for [elem,label] in dataset:
-    similarities.append([cosine_similarity(data,elem),label])
-  if len(similarities) > 0:
-    similarities.sort()
-    similarities.reverse()
-  return similarities
 
 # returns [label, data]
 def imgNet():
@@ -60,9 +55,11 @@ def imgNet():
       for elem in line[1:]:
         data.append(float(elem))
       if not results.has_key(actualLabel):
-        results[actualLabel] = np.array([0,0,0])
+        results[actualLabel] = [np.array([0,0,0,0]), []]
+        #results[actualLabel] = (np.array([0,0,0]))
       dataset.append([actualLabel,[data]])
       newline = f.readline()
+    results["overall"] = [np.array([0,0,0,0]), []]
   return [dataset,results]
 
 # returns [label, data]
@@ -76,19 +73,51 @@ def pc():
     if len(splitFN) > 4:
       actualLabel = actualLabel + "_" + splitFN[1]
     if not results.has_key(actualLabel):
-      results[actualLabel] = np.array([0,0,0])
+      results[actualLabel] = [np.array([0,0,0,0]), []]
+      #results[actualLabel] = (np.array([0,0,0]))
     dataset.append([actualLabel, [extractPCFeatures(fn)]])
+    results["overall"] = [np.array([0,0,0,0]), []]
   return [dataset,results]
+
+def calculateNN(data,dataset):
+  lenData = len(dataset)
+  similarities = []
+  ts = []
+  for index,[elem,label] in enumerate(dataset):
+    similarities.append([])
+    #t = Thread(target=threadMethod, args=(data,elem,label,similarities,index), name = index)
+    #t.start()
+    #ts.append(t)
+    threadMethod(data,elem,label,similarities,index)
+  for t in ts:
+    t.join()
+  if len(similarities) > 0:
+    similarities.sort()
+    similarities.reverse()
+  return similarities
+
+def threadMethod(data,elem,label,similarities,index):
+    similarities[index] = [cosine_similarity(data,elem),label]
+  
 
 def classify(similarity, actualLabel, label, results):    
   #print actualLabel, "is classified as", label
+  overall = "overall"
   if similarity > similarityThreshold:
     if actualLabel == label:
-      results[actualLabel][0] +=1
+      results[actualLabel][0][0] +=1
+      results[overall][0][0] +=1
     else:
-      results[actualLabel][1] +=1
+      results[actualLabel][0][1] +=1
+      results[overall][0][1] +=1
   else:
-    results[actualLabel][2] +=1
+    results[actualLabel][0][2] +=1
+    results[overall][0][2] +=1
+
+  results[actualLabel][0][3] +=1
+  results[overall][0][3] +=1
+  results[actualLabel][1].append(results[actualLabel][0][0] / float(results[actualLabel][0][3]))
+  results[overall][1].append(results[overall][0][0] / float(results[overall][0][3]))
   return results
 
 # returns results dict (label: [true, false, not classified]
@@ -102,8 +131,22 @@ def myNN(inputDataset, results):
       dataset.append([data,actualLabel])
     else:
       dataset.append([data,actualLabel])
-      results[actualLabel][2] +=1
+      results[actualLabel][0][2] +=1
+      results[actualLabel][0][3] +=1
+      results[actualLabel][1].append(0)
+      results["overall"][0][2] +=1
+      results["overall"][0][3] +=1
+      results["overall"][1].append(0)
   return results
+
+def plotIncrementalResults(results):
+  for result in results:
+    #print results[result][0][3], len(results[result][1])
+    plt.figure(1) 
+    if result == "overall":
+      plt.figure(2)
+    plt.plot(np.linspace(1,results[result][0][3],results[result][0][3]), results[result][1])
+  plt.show()
 
 
 def analyzeResults(results):
@@ -112,8 +155,7 @@ def analyzeResults(results):
   totalF = 0
   totalN = 0
   for result in results:
-    subtotal = results[result].sum()
-    [stotalT,stotalF,stotalN] = results[result]
+    [stotalT,stotalF,stotalN,subtotal] = results[result][0]
     total += subtotal   
     totalT += stotalT
     totalF += stotalF
@@ -161,18 +203,23 @@ if __name__== "__main__":
   # print fusedDataset
 
   pcResults = myNN(pcDataset,pcResults)
-  print "pc\n",pcResults
-  analyzeResults(pcResults)
+  print "pc\n",pcResults["overall"]
+  #analyzeResults(pcResults)
 
+  plotIncrementalResults(pcResults)
   print "\n"
 
   imgResults = myNN(imgDataset,imgResults)
-  print "img\n",imgResults
-  analyzeResults(imgResults)
+  #print "img\n",imgResults
+  #analyzeResults(imgResults)
 
-  print "\n"
+  plotIncrementalResults(imgResults)
 
-  fusedResults = myNN(fusedDataset, fusedResults)
-  print  "fused\n", fusedResults
-  analyzeResults(fusedResults)
+  print pcResults
+  print imgResults
+  #print "\n"
+
+  #fusedResults = myNN(fusedDataset, fusedResults)
+  #print  "fused\n", fusedResults
+  #analyzeResults(fusedResults)
 
