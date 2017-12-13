@@ -200,20 +200,18 @@ if __name__== "__main__":
   # print fusedDataset
 
   pcResults = myNN(pcDataset,pcResults)
-  print "pc\n",pcResults["overall"]
+  print "pc\n",pcResults["overall"][1][-1]
   analyzeResults(pcResults)
 
   plotIncrementalResults(pcResults, "Point Cloud")
   print "\n"
 
   imgResults = myNN(imgDataset,imgResults)
-  #print "img\n",imgResults
+  print "img\n",imgResults["overall"][1][-1]
   analyzeResults(imgResults)
 
   plotIncrementalResults(imgResults, "Image")
 
-  print pcResults
-  print imgResults
   #print "\n"
 
   #fusedResults = myNN(fusedDataset, fusedResults)
