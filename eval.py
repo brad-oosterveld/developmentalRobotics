@@ -139,12 +139,18 @@ def myNN(inputDataset, results):
       results["overall"][1].append(0)
   return results
 
-def plotIncrementalResults(results):
+def plotIncrementalResults(results,title):
   for result in results:
     #print results[result][0][3], len(results[result][1])
     plt.figure(1) 
+    plt.ylabel("Accuracy (%)")
+    plt.xlabel("Number of samples")
+    plt.title(title + " Individual Classification")
     if result == "overall":
       plt.figure(2)
+      plt.title(title + " Overall Classification")
+      plt.ylabel("Accuracy (%)")
+      plt.xlabel("Number of samples")
     plt.plot(np.linspace(1,results[result][0][3],results[result][0][3]), results[result][1])
   plt.show()
 
@@ -206,14 +212,14 @@ if __name__== "__main__":
   print "pc\n",pcResults["overall"]
   #analyzeResults(pcResults)
 
-  plotIncrementalResults(pcResults)
+  plotIncrementalResults(pcResults, "Point Cloud")
   print "\n"
 
   imgResults = myNN(imgDataset,imgResults)
   #print "img\n",imgResults
   #analyzeResults(imgResults)
 
-  plotIncrementalResults(imgResults)
+  plotIncrementalResults(imgResults, "Image")
 
   print pcResults
   print imgResults
