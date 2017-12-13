@@ -79,29 +79,23 @@ def pc():
     results["overall"] = [np.array([0,0,0,0]), []]
   return [dataset,results]
 
-def calculateNN(data,dataset):
+def calculateNN(data, dataset, data2, dataset2):
   lenData = len(dataset)
-  similarities = []
-  ts = []
-  for index,[elem,label] in enumerate(dataset):
-    similarities.append([])
-    #t = Thread(target=threadMethod, args=(data,elem,label,similarities,index), name = index)
-    #t.start()
-    #ts.append(t)
-    threadMethod(data,elem,label,similarities,index)
-  for t in ts:
-    t.join()
-  if len(similarities) > 0:
-    similarities.sort()
-    similarities.reverse()
+  similarities = [[],[],[]]
+  for index in xrange(0,lenData):
+    [elem,label] = dataset[index]
+    [elem2,label2] = dataset2[index]
+    pcSim = cosine_similarity(data,elem)
+    imgSim = cosine_similarity(data2,elem2)
+    similarities[0].append([pcSim, label])
+    similarities[1].append([imgSim,label])
+    similarities[2].append([pcSim+imgSim, label])
   return similarities
 
-def threadMethod(data,elem,label,similarities,index):
-    similarities[index] = [cosine_similarity(data,elem),label]
-  
 
-def classify(similarity, actualLabel, label, results):    
+def classify(sim, actualLabel, results):    
   #print actualLabel, "is classified as", label
+  [similarity,label] = sim
   overall = "overall"
   if similarity > similarityThreshold:
     if actualLabel == label:
@@ -121,23 +115,73 @@ def classify(similarity, actualLabel, label, results):
   return results
 
 # returns results dict (label: [true, false, not classified]
-def myNN(inputDataset, results):
-  dataset = []
-  for [actualLabel,data] in inputDataset[:]:
-    nns = calculateNN(data,dataset)
-    if len(nns) > 0:
-      [similarity, guessLabel] = nns[0]
-      results = classify(similarity, actualLabel, guessLabel, results)
-      dataset.append([data,actualLabel])
+#def myNN(inputDataset, results):
+#  dataset = []
+#  similarities = dict()
+#  for [actualLabel,data] in inputDataset[:]:
+#    nns = calculateNN(data,dataset)
+#    similarities[actualLabel] = nns[:3]
+#    if len(nns) > 0:
+#      [similarity, guessLabel] = nns[0]
+#      results = classify(similarity, actualLabel, guessLabel, results)
+#      dataset.append([data,actualLabel])
+#    else:
+#      dataset.append([data,actualLabel])
+#      results[actualLabel][0][2] +=1
+#      results[actualLabel][0][3] +=1
+#      results[actualLabel][1].append(0)
+#      results["overall"][0][2] +=1
+#      results["overall"][0][3] +=1
+#      results["overall"][1].append(0)
+#  return (similarities,results)
+
+def myNN(pcInput, imgInput, pcResults, imgResults, cResults):
+  pcDataset = []
+  imgDataset = []
+  for i in xrange (0, len(pcInput)):
+  #for i in xrange (0, 100):
+    [pcLabel, pcData] = pcInput[i]
+    [imgLabel, imgData] = imgInput[i]
+    cNN = calculateNN(pcData, pcDataset, imgData, imgDataset)
+    if len(cNN[0]) > 0:
+      [pcSim, imgSim, cSim] = cNN
+      pcSim.sort()
+      pcSim.reverse()
+      imgSim.sort()
+      imgSim.reverse()
+      cSim.sort()
+      cSim.reverse()
+      print pcSim[0]
+      print imgSim[0]
+      print cSim[0]
+      print "\n"
+      pcResults = classify(pcSim[0], pcLabel, pcResults)
+      imgResults = classify(imgSim[0], imgLabel, imgResults)
+      cResults = classify(cSim[0], pcLabel, cResults)
+      pcDataset.append([pcData,pcLabel])
+      imgDataset.append([imgData,imgLabel])
     else:
-      dataset.append([data,actualLabel])
-      results[actualLabel][0][2] +=1
-      results[actualLabel][0][3] +=1
-      results[actualLabel][1].append(0)
-      results["overall"][0][2] +=1
-      results["overall"][0][3] +=1
-      results["overall"][1].append(0)
-  return results
+      pcDataset.append([pcData,pcLabel])
+      imgDataset.append([imgData,imgLabel])
+      pcResults[pcLabel][0][2] +=1
+      pcResults[pcLabel][0][3] +=1
+      pcResults[pcLabel][1].append(0)
+      pcResults["overall"][0][2] +=1
+      pcResults["overall"][0][3] +=1
+      pcResults["overall"][1].append(0)
+      imgResults[pcLabel][0][2] +=1
+      imgResults[pcLabel][0][3] +=1
+      imgResults[pcLabel][1].append(0)
+      imgResults["overall"][0][2] +=1
+      imgResults["overall"][0][3] +=1
+      imgResults["overall"][1].append(0)
+      cResults[pcLabel][0][2] +=1
+      cResults[pcLabel][0][3] +=1
+      cResults[pcLabel][1].append(0)
+      cResults["overall"][0][2] +=1
+      cResults["overall"][0][3] +=1
+      cResults["overall"][1].append(0)
+  return [pcResults, imgResults, cResults]
 
 def plotIncrementalResults(results,title):
   for result in results:
@@ -167,10 +211,16 @@ def analyzeResults(results):
 if __name__== "__main__":
   [imgDataset, imgResults] = imgNet()
   [pcDataset, pcResults] = pc()
+  cResults = pcResults
+  print cResults
+  print pcResults
 
   #sort datasets into smae order
   imgDataset.sort()
   pcDataset.sort()
+  print len(imgDataset), len(pcDataset)
+  #for i in xrange(0,len(pcDataset)):
+  #  print pcDataset[i][0], imgDataset[i][0]
 
   #shuffle into same random order
   combined=list(zip(imgDataset, pcDataset))
@@ -199,18 +249,20 @@ if __name__== "__main__":
   # print pcDataset
   # print fusedDataset
 
-  pcResults = myNN(pcDataset,pcResults)
-  print "pc\n",pcResults["overall"][1][-1]
-  analyzeResults(pcResults)
+  [pcResults,imgResults,cResults] = myNN(pcDataset,imgDataset, pcResults, imgResults,cResults)
+  #print "pc\n",pcResults["overall"][1][-1]
+  #analyzeResults(pcResults)
 
   plotIncrementalResults(pcResults, "Point Cloud")
-  print "\n"
+  #print "\n"
 
-  imgResults = myNN(imgDataset,imgResults)
-  print "img\n",imgResults["overall"][1][-1]
-  analyzeResults(imgResults)
+  #(imgSimilarities, imgResults) = myNN(imgDataset,imgResults)
+  #print "img\n",imgResults["overall"][1][-1]
+  #analyzeResults(imgResults)
 
   plotIncrementalResults(imgResults, "Image")
+  plotIncrementalResults(cResults, "Combined")
+  #combinedNN(pcSimilarities,imgSimilarities,combinedResults)
 
   #print "\n"
 
