@@ -28,7 +28,7 @@ from threading import Thread
 
 knn = 5
 pcDir = "pcd_features/"
-similarityThreshold = .5
+similarityThreshold = .7
 
 def extractPCFeatures(filename):
   f = open(filename, "r")
@@ -42,25 +42,21 @@ def extractPCFeatures(filename):
 # returns [label, data]
 def imgNet():
   dataset = []
-  results = dict()
   with open("features.txt") as f:
     newline = f.readline()
     while newline != "":
       line = newline.strip().split(" ")
-      label = line[0].split("_")
+      label = line[0].split(".")[0].split("_crop")
       actualLabel = label[0]
+      #actualLabel = label[0]
       data = []
-      if len(label) > 5:
-        actualLabel += "_" + label[1]
+      #if len(label) > 5:
+      #  actualLabel += "_" + label[1]
       for elem in line[1:]:
         data.append(float(elem))
-      if not results.has_key(actualLabel):
-        results[actualLabel] = [np.array([0,0,0,0]), []]
-        #results[actualLabel] = (np.array([0,0,0]))
       dataset.append([actualLabel,[data]])
       newline = f.readline()
-    results["overall"] = [np.array([0,0,0,0]), []]
-  return [dataset,results]
+  return dataset
 
 # returns [label, data]
 def pc():
@@ -68,16 +64,11 @@ def pc():
   dataset = []
   results = dict()
   for fn in pcFilenames:
-    splitFN = fn.strip().split("/")[1].split("_")
+    #splitFN = fn.strip().split("/")[1].split("_")
+    splitFN = fn.strip().split("/")[1].split(".")
     actualLabel = splitFN[0]
-    if len(splitFN) > 4:
-      actualLabel = actualLabel + "_" + splitFN[1]
-    if not results.has_key(actualLabel):
-      results[actualLabel] = [np.array([0,0,0,0]), []]
-      #results[actualLabel] = (np.array([0,0,0]))
     dataset.append([actualLabel, [extractPCFeatures(fn)]])
-    results["overall"] = [np.array([0,0,0,0]), []]
-  return [dataset,results]
+  return dataset
 
 def calculateNN(data, dataset, data2, dataset2):
   lenData = len(dataset)
@@ -89,7 +80,7 @@ def calculateNN(data, dataset, data2, dataset2):
     imgSim = cosine_similarity(data2,elem2)
     similarities[0].append([pcSim, label])
     similarities[1].append([imgSim,label])
-    similarities[2].append([pcSim+imgSim, label])
+    similarities[2].append([(pcSim+imgSim) / 2.0, label])
   return similarities
 
 
@@ -114,32 +105,11 @@ def classify(sim, actualLabel, results):
   results[overall][1].append(results[overall][0][0] / float(results[overall][0][3]))
   return results
 
-# returns results dict (label: [true, false, not classified]
-#def myNN(inputDataset, results):
-#  dataset = []
-#  similarities = dict()
-#  for [actualLabel,data] in inputDataset[:]:
-#    nns = calculateNN(data,dataset)
-#    similarities[actualLabel] = nns[:3]
-#    if len(nns) > 0:
-#      [similarity, guessLabel] = nns[0]
-#      results = classify(similarity, actualLabel, guessLabel, results)
-#      dataset.append([data,actualLabel])
-#    else:
-#      dataset.append([data,actualLabel])
-#      results[actualLabel][0][2] +=1
-#      results[actualLabel][0][3] +=1
-#      results[actualLabel][1].append(0)
-#      results["overall"][0][2] +=1
-#      results["overall"][0][3] +=1
-#      results["overall"][1].append(0)
-#  return (similarities,results)
-
 def myNN(pcInput, imgInput, pcResults, imgResults, cResults):
   pcDataset = []
   imgDataset = []
   for i in xrange (0, len(pcInput)):
-  #for i in xrange (0, 100):
+  #for i in xrange (0, 1000):
     [pcLabel, pcData] = pcInput[i]
     [imgLabel, imgData] = imgInput[i]
     cNN = calculateNN(pcData, pcDataset, imgData, imgDataset)
@@ -151,10 +121,10 @@ def myNN(pcInput, imgInput, pcResults, imgResults, cResults):
       imgSim.reverse()
       cSim.sort()
       cSim.reverse()
-      print pcSim[0]
-      print imgSim[0]
-      print cSim[0]
-      print "\n"
+     # print pcSim[0]
+     # print imgSim[0]
+     # print cSim[0]
+     # print "\n"
       pcResults = classify(pcSim[0], pcLabel, pcResults)
       imgResults = classify(imgSim[0], imgLabel, imgResults)
       cResults = classify(cSim[0], pcLabel, cResults)
@@ -184,20 +154,49 @@ def myNN(pcInput, imgInput, pcResults, imgResults, cResults):
   return [pcResults, imgResults, cResults]
 
 def plotIncrementalResults(results,title):
-  for result in results:
-    #print results[result][0][3], len(results[result][1])
-    plt.figure(1) 
-    plt.ylabel("Accuracy (%)")
-    plt.xlabel("Number of samples")
-    plt.title(title + " Individual Classification")
-    if result == "overall":
-      plt.figure(2)
-      plt.title(title + " Overall Classification")
-      plt.ylabel("Accuracy (%)")
-      plt.xlabel("Number of samples")
-    plt.plot(np.linspace(1,results[result][0][3],results[result][0][3]), results[result][1])
+  index = 0
+  best = ["r",[0]]
+  worst = ["r",[12000000]]
+  for r in results:
+    for result in r:
+      #print results[result][0][3], len(results[result][1])
+      if result != "overall":# and len(r[result][1]) >1:
+        if r[result][1][-1] > best[1][-1]:
+          best[1] = r[result][1]
+          best[0] = result
+        if r[result][1][-1] < worst[1][-1]:
+          worst[1] = r[result][1]
+          worst[0] = result
+        plt.figure(1) 
+        plt.ylabel("Accuracy")
+        plt.axis([0,200,0,1])
+        plt.xlabel("Number of samples")
+        plt.title("Individual Classification")
+    if index == 0:
+      plt.plot(np.linspace(1,len(best[1]),len(best[1])), best[1], label ="VFH "+best[0], ls="-")
+      plt.plot(np.linspace(1,len(worst[1]),len(worst[1])), worst[1], label ="VFH " + worst[0], ls ="-")
+    elif index == 1:
+      plt.plot(np.linspace(1,len(best[1]),len(best[1])), best[1],label = "Inception v3 "+best[0], ls ="--")
+      plt.plot(np.linspace(1,len(worst[1]),len(worst[1])), worst[1],label = "Inception v3 " + worst[0], ls ="--")
+    elif index == 2:
+      plt.plot(np.linspace(1,len(best[1]),len(best[1])), best[1], label ="Combined "+best[0])
+      plt.plot(np.linspace(1,len(worst[1]),len(worst[1])), worst[1],label = "Combined " + worst[0])
+    index +=1
+  plt.legend(loc=2)
   plt.show()
 
+def plotIncrementalOverall(overallA, overallB, overallC):
+  plt.figure(2) 
+  plt.ylabel("Accuracy")
+  plt.xlabel("Number of samples")
+  plt.axis([0,4000,0,1])
+  plt.title("Overall Classification")
+  plt.plot(np.linspace(1,overallA[0][3],overallA[0][3]), overallA[1], label="VFH")
+  plt.plot(np.linspace(1,overallB[0][3],overallB[0][3]), overallB[1], label="Inception v3")
+  plt.plot(np.linspace(1,overallC[0][3],overallC[0][3]), overallC[1], label="Combination")
+  plt.legend(loc=2)
+  plt.show()
+  
 
 def analyzeResults(results):
   for result in results:
@@ -209,18 +208,34 @@ def analyzeResults(results):
       print "\tno classification: ", stotalN
 
 if __name__== "__main__":
-  [imgDataset, imgResults] = imgNet()
-  [pcDataset, pcResults] = pc()
-  cResults = pcResults
-  print cResults
-  print pcResults
+  imgDataset = imgNet()
+  pcDataset = pc()
 
   #sort datasets into smae order
   imgDataset.sort()
   pcDataset.sort()
-  print len(imgDataset), len(pcDataset)
-  #for i in xrange(0,len(pcDataset)):
-  #  print pcDataset[i][0], imgDataset[i][0]
+  pcResults = dict()
+  imgResults = dict()
+  cResults = dict()
+  for i in xrange(0,len(pcDataset)):
+    pcLabels = pcDataset[i][0].split("_")
+    imgLabels = imgDataset[i][0].split("_")
+    pcLabel = pcLabels[0]
+    imgLabel = imgLabels[0]
+    if len(pcLabels) > 4:
+      pcLabel += "_" + pcLabels[1]
+      imgLabel += "_" + imgLabels[1]
+    pcDataset[i][0] = pcLabel
+    imgDataset[i][0] = imgLabel
+    if not pcResults.has_key(pcLabel):
+      pcResults[pcLabel] = [np.array([0,0,0,0]), []]
+      imgResults[pcLabel] = [np.array([0,0,0,0]), []]
+      cResults[pcLabel] = [np.array([0,0,0,0]), []]
+
+  pcResults["overall"] = [np.array([0,0,0,0]), []]
+  imgResults["overall"] = [np.array([0,0,0,0]), []]
+  cResults["overall"] = [np.array([0,0,0,0]), []]
+
 
   #shuffle into same random order
   combined=list(zip(imgDataset, pcDataset))
@@ -248,24 +263,27 @@ if __name__== "__main__":
   # print imgDataset
   # print pcDataset
   # print fusedDataset
-
   [pcResults,imgResults,cResults] = myNN(pcDataset,imgDataset, pcResults, imgResults,cResults)
   #print "pc\n",pcResults["overall"][1][-1]
-  #analyzeResults(pcResults)
+  print "pcd"
+  analyzeResults(pcResults)
+  print "\nimg"
+  analyzeResults(imgResults)
+  print "\ncombined"
+  analyzeResults(cResults)
 
-  plotIncrementalResults(pcResults, "Point Cloud")
   #print "\n"
 
   #(imgSimilarities, imgResults) = myNN(imgDataset,imgResults)
   #print "img\n",imgResults["overall"][1][-1]
-  #analyzeResults(imgResults)
 
-  plotIncrementalResults(imgResults, "Image")
-  plotIncrementalResults(cResults, "Combined")
+  plotIncrementalResults([pcResults,imgResults,cResults], "Best & Worst")
+  #plotIncrementalResults(imgResults, "Image")
+  #plotIncrementalResults(cResults, "Combined")
   #combinedNN(pcSimilarities,imgSimilarities,combinedResults)
 
+  plotIncrementalOverall(pcResults["overall"], imgResults["overall"], cResults["overall"])
   #print "\n"
 
   #fusedResults = myNN(fusedDataset, fusedResults)
   #print  "fused\n", fusedResults
-  #analyzeResults(fusedResults)
