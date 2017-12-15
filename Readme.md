@@ -15,9 +15,9 @@ Bradley Oosterveld & Tyler Frasca
 
 3. Extract Features:
 * 2D
-    * ```$ cp dev_classify_image.py to $TF_INSTALL_DIR/models/tutorials/image/imagenet```
+    * ```$ cp get_inception_features.py to $TF_INSTALL_DIR/models/tutorials/image/imagenet```
     * ```$ cd $TF_INSTALL_DIR/models/tutorials/image/imagenet```
-    * ```$ python dev_classify_image.py```
+    * ```$ python get_inception_features.py $PATH_TO_DATA```
 
 4. Run Evaluations:
 
