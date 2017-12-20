@@ -12,7 +12,11 @@ Bradley Oosterveld & Tyler Frasca
 * VFH:
 
 2. Sub-sample Dataset:
-
+    * Download dataset: http://rgbd-dataset.cs.washington.edu/dataset/
+    * update paths in extract images.py
+    * ```$ python extract images.py```
+    * ```$ python compareFiles.py```
+    * remove entries that only appear in one dataset
 3. Extract Features:
 * 2D
     * ```$ cp get_inception_features.py to $TF_INSTALL_DIR/models/tutorials/image/imagenet```
@@ -20,4 +24,5 @@ Bradley Oosterveld & Tyler Frasca
     * ```$ python get_inception_features.py $PATH_TO_DATA```
 
 4. Run Evaluations:
+    * ```$ python eval.py```
 
